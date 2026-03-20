@@ -1,0 +1,12 @@
+[submodule "python/data/openbb"]
+	path = python/data/openbb
+	url = https://github.com/OpenBB-finance/OpenBB.git
+[submodule "python/agents/virattt"]
+	path = python/agents/virattt
+	url = https://github.com/virattt/ai-hedge-fund.git
+[submodule "python/research/dexter"]
+	path = python/research/dexter
+	url = https://github.com/virattt/dexter.git
+[submodule "crucix"]
+	path = crucix
+	url = https://github.com/calesthio/Crucix.git
