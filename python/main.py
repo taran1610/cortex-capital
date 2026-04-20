@@ -1,31 +1,59 @@
-from tradingagents.graph.trading_graph import TradingAgentsGraph
-from tradingagents.default_config import DEFAULT_CONFIG
+"""
+Cortex Capital — entry point for the LangGraph swarm (CLI).
+
+The Streamlit dashboard imports `graph.workflow` directly so this file stays
+thin and free of circular imports.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import sys
+from pathlib import Path
 
 from dotenv import load_dotenv
 
-# Load environment variables from .env file
-load_dotenv()
+_ROOT = Path(__file__).resolve().parent
+if str(_ROOT) not in sys.path:
+    sys.path.insert(0, str(_ROOT))
 
-# Create a custom config
-config = DEFAULT_CONFIG.copy()
-config["deep_think_llm"] = "gpt-5-mini"  # Use a different model
-config["quick_think_llm"] = "gpt-5-mini"  # Use a different model
-config["max_debate_rounds"] = 1  # Increase debate rounds
+load_dotenv(_ROOT / ".env")
 
-# Configure data vendors (default uses yfinance, no extra API keys needed)
-config["data_vendors"] = {
-    "core_stock_apis": "yfinance",           # Options: alpha_vantage, yfinance
-    "technical_indicators": "yfinance",      # Options: alpha_vantage, yfinance
-    "fundamental_data": "yfinance",          # Options: alpha_vantage, yfinance
-    "news_data": "yfinance",                 # Options: alpha_vantage, yfinance
-}
+from graph.workflow import run_swarm  # noqa: E402
 
-# Initialize with custom config
-ta = TradingAgentsGraph(debug=True, config=config)
 
-# forward propagate
-_, decision = ta.propagate("NVDA", "2024-05-10")
-print(decision)
+def main() -> None:
+    p = argparse.ArgumentParser(
+        description="Run the Cortex Capital AI-native hedge fund swarm for one ticker."
+    )
+    p.add_argument("--ticker", default="NVDA", help="US equity symbol")
+    p.add_argument("--json", action="store_true", help="Print full state as JSON")
+    args = p.parse_args()
 
-# Memorize mistakes and reflect
-# ta.reflect_and_remember(1000) # parameter is the position returns
+    result = run_swarm(args.ticker)
+    if args.json:
+        # Drop non-serializable / bulky keys
+        slim = {k: v for k, v in result.items() if k != "research_bundle"}
+        rb = result.get("research_bundle") or {}
+        if isinstance(rb, dict):
+            slim["research_bundle"] = {
+                k: v
+                for k, v in rb.items()
+                if k != "price_frame"
+            }
+            px = rb.get("price_frame")
+            if hasattr(px, "tail"):
+                slim["research_bundle"]["price_tail"] = px.tail(5).to_dict(orient="records")
+        print(json.dumps(slim, default=str, indent=2))
+        return
+
+    print("CORTEX CAPITAL — portfolio decision")
+    print(json.dumps(result.get("portfolio_decision"), indent=2, default=str))
+    print("\nMacro (Crucix):", result.get("macro", {}).get("status") or "live JSON")
+    for line in result.get("log") or []:
+        print(" ·", line)
+
+
+if __name__ == "__main__":
+    main()

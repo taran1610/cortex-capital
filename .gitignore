@@ -1,0 +1,39 @@
+# macOS
+.DS_Store
+
+# Python bytecode / caches
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+.venv/
+venv/
+python/venv/
+
+# Environment files / secrets
+.env
+.env.*
+!.env.example
+python/.env
+python/.env.*
+!python/.env.example
+
+# Local data / runtime outputs
+python/data/*.db
+python/data/*.sqlite
+python/reports/*.csv
+python/reports/*.md
+
+# Logs
+*.log
+
+# IDE / editor
+.vscode/
+.idea/
+
+# Streamlit cache
+.streamlit/
+
+# Node modules in submodule checkouts (if present locally)
+node_modules/
