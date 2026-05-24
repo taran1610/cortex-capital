@@ -1,0 +1,84 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-mono), "IBM Plex Mono", ui-monospace, monospace;
+  --color-saas-void: #06080f;
+  --color-saas-base: #0a0d14;
+  --color-saas-surface: #0f141f;
+  --color-saas-raised: #161d2c;
+  --color-saas-border: rgba(255, 255, 255, 0.07);
+  --color-saas-accent: #22d3ee;
+  --color-saas-accent-dim: #0891b2;
+  --color-saas-violet: #a78bfa;
+  --color-saas-amber: #fbbf24;
+  /* Legacy aliases used across existing utilities */
+  --color-cortex-void: #06080f;
+  --color-cortex-surface: #0f141f;
+  --color-cortex-elevated: #161d2c;
+  --color-cortex-mint: #22d3ee;
+  --color-cortex-violet: #a78bfa;
+  --color-cortex-amber: #fbbf24;
+}
+
+@utility font-display {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
+}
+
+@utility saas-panel {
+  @apply rounded-2xl border border-white/[0.06] bg-gradient-to-b from-white/[0.04] to-transparent shadow-[0_0_0_1px_rgba(255,255,255,0.02)_inset,0_24px_64px_-32px_rgba(0,0,0,0.75)] backdrop-blur-xl;
+}
+
+@utility saas-kicker {
+  @apply font-mono text-[10px] font-bold uppercase tracking-[0.22em] text-cyan-400/90;
+}
+
+@utility cortex-panel {
+  @apply saas-panel;
+}
+
+@utility text-gradient-cortex {
+  @apply bg-gradient-to-br from-white via-slate-200 to-slate-500 bg-clip-text text-transparent;
+}
+
+@utility text-gradient-mint {
+  @apply bg-gradient-to-r from-cyan-300 via-sky-300 to-teal-300 bg-clip-text text-transparent;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  @apply min-h-dvh text-slate-300 antialiased;
+  background-color: var(--color-saas-void);
+  background-image:
+    radial-gradient(ellipse 140% 80% at 50% -30%, rgba(34, 211, 238, 0.09), transparent 55%),
+    radial-gradient(ellipse 50% 40% at 100% 0%, rgba(167, 139, 250, 0.07), transparent 50%),
+    radial-gradient(ellipse 45% 35% at 0% 100%, rgba(34, 211, 238, 0.04), transparent 50%),
+    linear-gradient(180deg, #080b12 0%, #06080f 38%, #070910 100%);
+  background-attachment: fixed;
+}
+
+::selection {
+  background: rgba(34, 211, 238, 0.2);
+  color: #f8fafc;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(10, 13, 20, 0.9);
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, rgba(34, 211, 238, 0.35), rgba(167, 139, 250, 0.3));
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, rgba(34, 211, 238, 0.5), rgba(167, 139, 250, 0.45));
+  background-clip: padding-box;
+}

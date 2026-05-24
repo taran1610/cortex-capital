@@ -12,13 +12,35 @@ Cortex Capital is a research and execution sandbox for the YC thesis:
 This repo is designed to show:
 - an end-to-end **research -> debate -> risk -> portfolio decision** workflow,
 - a polished **institutional Streamlit console**,
+- a **Next.js 15 swarm dashboard** (`web/`) that can call the LangGraph stack via FastAPI when *Real LLM mode* is on,
 - a simple **90-day backtest harness**,
 - optional **IBKR paper trade hooks**,
 - local **decision memory** for traceability.
 
+### Next.js + Python API (local dev)
+
+| Layer | Command |
+|--------|---------|
+| Python API (LangGraph + kernel) | `cd python && uvicorn api.app:app --host 0.0.0.0 --port 8800` |
+| Web dashboard | `cd web && npm run dev` |
+
+Point the web app at the API with `CORTEX_PYTHON_API_URL` (see `web/.env.example`). On Vercel, set that env var to your hosted Python URL. Repo integration map: `GET http://127.0.0.1:8800/swarm/integrations` or `GET /api/swarm/integrations` from Next.
+
 ---
 
 ## High-Level Architecture
+
+### Two layers (by design)
+
+1. **Modular kernel (`python/cortex/`)** — small, synchronous, unit-testable:
+   data → strategy → risk → execution → storage → backtest loop.  
+   See [`python/cortex/README.md`](python/cortex/README.md).
+
+2. **Agentic stack (`python/graph/` + `cortex_tools/`)** — LangGraph swarm,
+   OpenBB/Crucix/IBKR integrations, Streamlit UI.
+
+They coexist on purpose: ship a believable “fund OS” without forcing every demo
+through an LLM.
 
 ### Core components
 - **Orchestration:** LangGraph (`python/graph/*`)
@@ -49,9 +71,11 @@ cortex-capital/
 ├── .gitmodules
 ├── crucix/                       # submodule: macro OSINT engine
 └── python/
-    ├── main.py                   # CLI entry
+    ├── main.py                   # CLI entry (LangGraph swarm)
     ├── requirements.txt
     ├── .env.example
+    ├── cortex/                   # modular kernel (Phase 1)
+    ├── api/                      # FastAPI control plane (optional)
     ├── graph/
     │   ├── state.py
     │   ├── nodes.py
@@ -134,6 +158,29 @@ source .venv/bin/activate
 python main.py --ticker NVDA
 python main.py --ticker NVDA --json
 ```
+
+### Modular kernel (RSI demo pipeline)
+
+```bash
+cd ~/cortex-capital/python
+source .venv/bin/activate
+python -m cortex --symbol SPY --period 6mo
+```
+
+Trades append to `python/data/trades.csv` (gitignored).
+
+---
+
+## API (optional control plane)
+
+```bash
+cd ~/cortex-capital/python
+source .venv/bin/activate
+uvicorn api.app:app --reload --port 8800
+```
+
+- `GET /health`
+- `GET /run/kernel?symbol=SPY&period=6mo`
 
 ---
 

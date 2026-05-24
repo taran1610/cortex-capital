@@ -22,6 +22,7 @@ python/.env.*
 # Local data / runtime outputs
 python/data/*.db
 python/data/*.sqlite
+python/data/trades.csv
 python/reports/*.csv
 python/reports/*.md
 
@@ -37,3 +38,16 @@ python/reports/*.md
 
 # Node modules in submodule checkouts (if present locally)
 node_modules/
+
+# Next.js build output
+.next/
+out/
+.vercel/
+
+# TypeScript build info
+*.tsbuildinfo
+next-env.d.ts
+
+# Misc
+.DS_Store
+*.pem

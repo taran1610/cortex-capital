@@ -1,0 +1,22 @@
+/** Display names for ai-hedge-fund / TradingAgents-style persona keys (see python/graph/legendary_agents.py). */
+export const LEGEND_DISPLAY: Record<string, string> = {
+  aswath_damodaran: "Aswath Damodaran",
+  ben_graham: "Ben Graham",
+  bill_ackman: "Bill Ackman",
+  cathie_wood: "Cathie Wood",
+  charlie_munger: "Charlie Munger",
+  michael_burry: "Michael Burry",
+  mohnish_pabrai: "Mohnish Pabrai",
+  peter_lynch: "Peter Lynch",
+  phil_fisher: "Phil Fisher",
+  rakesh_jhunjhunwala: "Rakesh Jhunjhunwala",
+  stanley_druckenmiller: "Stanley Druckenmiller",
+  warren_buffett: "Warren Buffett",
+  technical_analyst: "Technical Analyst",
+  fundamentals_analyst: "Fundamentals Analyst",
+  growth_analyst: "Growth Analyst",
+  news_sentiment_analyst: "News Sentiment Analyst",
+  sentiment_analyst: "Sentiment Analyst",
+  valuation_analyst: "Valuation Analyst",
+  error: "Committee (error)",
+};
