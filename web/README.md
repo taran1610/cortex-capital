@@ -36,9 +36,12 @@ Open [http://localhost:3000](http://localhost:3000). On `/dashboard`, leave *Rea
 
 1. Push this repo to GitHub (`taran1610/cortex-capital` or your fork).  
 2. In [Vercel](https://vercel.com/new), **Import** the repository.  
-3. Set **Root Directory** to `web` (or deploy only the `web` folder as its own project).  
+3. **Important:** Set **Root Directory** to `web` (Project Settings → General → Root Directory).  
+   - If you deploy from the repo root instead, the root `vercel.json` also builds `web/` via `@vercel/next`.  
 4. Framework preset: **Next.js**. Build: `npm run build`, Output: default.  
 5. Deploy — no environment variables are required for the mock UI.
+
+If you see `404: NOT_FOUND` on your Vercel URL, the project is almost always pointed at the wrong root — set Root Directory to `web` and redeploy.
 
 ## How to connect real agents
 
